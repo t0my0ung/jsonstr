@@ -178,4 +178,8 @@ For detailed settings instructions, please refer to [SETTINGS.md](./SETTINGS.md)
 
 ## License
 
-MIT License
+This project is licensed under the CC0 1.0 Universal License - see the [LICENSE](LICENSE) file for details.
+
+CC0 1.0 Universal is the most permissive license available. It dedicates the work to the public domain by waiving all of the author's rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law.
+
+You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission.
