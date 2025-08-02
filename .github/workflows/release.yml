@@ -6,6 +6,11 @@ on:
       - main
   workflow_dispatch: # 允许手动触发
 
+# 添加明确的权限配置 - 解决403错误
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,6 +18,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史以支持标签创建
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -53,6 +60,8 @@ jobs:
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: v${{ steps.get_version.outputs.version }}
         name: Release v${{ steps.get_version.outputs.version }}
@@ -78,4 +87,5 @@ jobs:
           - Shortcut: Ctrl+Shift+T (Windows/Linux) or Cmd+Shift+T (Mac)
         files: ${{ steps.filename.outputs.filename }}
         draft: false
-        prerelease: false 
+        prerelease: false
+        generate_release_notes: true
