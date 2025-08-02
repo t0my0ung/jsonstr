@@ -4,6 +4,21 @@
 
 这个项目使用GitHub Actions自动构建和发布VS Code扩展。
 
+### 重要设置
+
+在首次使用前，请更新 `package.json` 中的仓库URL：
+
+```json
+{
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git"
+  }
+}
+```
+
+将 `YOUR_USERNAME` 和 `YOUR_REPO_NAME` 替换为你的GitHub用户名和仓库名。
+
 ### 发布步骤
 
 1. **更新版本号**
@@ -82,6 +97,7 @@ npm run version 2.0.0-rc.1
 - 发布会自动创建Git标签
 - 可以在GitHub Actions页面查看构建日志
 - 支持预发布版本 (beta, rc等)
+- **重要**：确保package.json中的repository URL正确
 
 ### 故障排除
 
@@ -90,4 +106,5 @@ npm run version 2.0.0-rc.1
 1. 检查GitHub Actions日志
 2. 确保package.json中的版本号正确
 3. 确保所有依赖都已安装
-4. 检查构建脚本是否正常工作 
+4. 检查构建脚本是否正常工作
+5. 验证repository URL是否正确设置 

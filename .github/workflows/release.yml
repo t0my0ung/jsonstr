@@ -26,15 +26,15 @@ jobs:
     - name: Build extension
       run: npm run compile
       
-    - name: Package extension
-      run: npm run package
-      
     - name: Get version from package.json
       id: get_version
       run: |
         VERSION=$(node -p "require('./package.json').version")
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "Extension version: $VERSION"
+        
+    - name: Package extension
+      run: npm run package
         
     - name: Create VSIX filename
       id: filename
@@ -43,10 +43,6 @@ jobs:
         FILENAME="jsonstr-$VERSION.vsix"
         echo "filename=$FILENAME" >> $GITHUB_OUTPUT
         echo "VSIX filename: $FILENAME"
-        
-    - name: Rename VSIX file
-      run: |
-        mv *.vsix ${{ steps.filename.outputs.filename }}
         
     - name: Upload VSIX artifact
       uses: actions/upload-artifact@v4
