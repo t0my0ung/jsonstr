@@ -105,6 +105,7 @@ npm run version 2.0.0-rc.1
 
 1. 检查GitHub Actions日志
 2. 确保package.json中的版本号正确
-3. 确保所有依赖都已安装
+3. 确保所有依赖都已安装（包括@vscode/vsce）
 4. 检查构建脚本是否正常工作
-5. 验证repository URL是否正确设置 
+5. 验证repository URL是否正确设置
+6. 如果遇到"vsce: not found"错误，确保@vscode/vsce已作为开发依赖安装 
