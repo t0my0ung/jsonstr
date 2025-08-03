@@ -60,7 +60,12 @@ jobs:
       
     - name: Package extension
       if: steps.check_version.outputs.should-release == 'true'
-      run: npm run package
+      run: |
+        # 清理临时文件
+        if [ -d "temp-vsix" ]; then
+          rm -rf temp-vsix
+        fi
+        npm run package
       
     - name: Create VSIX filename
       if: steps.check_version.outputs.should-release == 'true'
@@ -93,15 +98,30 @@ jobs:
           console.log('Publisher:', pkg.publisher);
           console.log('DisplayName:', pkg.displayName);
           console.log('Description:', pkg.description);
+          console.log('Icon:', pkg.icon);
+          console.log('Icon exists:', require('fs').existsSync(pkg.icon));
         "
         
         # 验证VSIX文件
         echo "Validating VSIX file..."
         vsce ls ${{ steps.filename.outputs.filename }}
         
+        # 运行VSIX检查脚本
+        echo "Running VSIX validation script..."
+        npm run check:vsix
+        
         # 发布到marketplace
         echo "Publishing to VS Code Marketplace..."
-        vsce publish --pat ${{ secrets.VSCE_PAT }} --packagePath ${{ steps.filename.outputs.filename }}
+        echo "Using PAT: ${{ secrets.VSCE_PAT != '' && 'PAT is set' || 'PAT is NOT set' }}"
+        
+        # 检查VSIX文件是否存在
+        if [ ! -f "${{ steps.filename.outputs.filename }}" ]; then
+          echo "❌ VSIX file not found: ${{ steps.filename.outputs.filename }}"
+          exit 1
+        fi
+        
+        # 发布到marketplace
+        vsce publish --pat ${{ secrets.VSCE_PAT }} --packagePath ${{ steps.filename.outputs.filename }} --no-dependencies
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
         

@@ -12,3 +12,7 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+temp-vsix/**
+scripts/debug-workflow.js
+scripts/check-vsix.js
+RELEASE_SETUP.md
