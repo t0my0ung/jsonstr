@@ -16,6 +16,7 @@ permissions:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    environment: production  # 指定使用environment
     
     steps:
     - name: Checkout code
