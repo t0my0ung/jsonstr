@@ -4,6 +4,7 @@
   "description": "A simple VS Code extension",
   "version": "1.0.0",
   "publisher": "t0my0ung",
+  "icon": "media/icon.jpg",
   "repository": {
     "type": "git",
     "url": "https://github.com/t0my0ung/jsonstr.git"
