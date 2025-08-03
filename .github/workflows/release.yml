@@ -1,25 +1,62 @@
-name: Build and Release VS Code Extension
+name: Smart Release - VS Code Extension
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'package.json'  # 只在package.json变化时触发
   workflow_dispatch: # 允许手动触发
 
-# 添加明确的权限配置 - 解决403错误
+# 添加明确的权限配置
 permissions:
   contents: write
   packages: write
 
 jobs:
-  build:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      should-release: ${{ steps.check.outputs.should-release }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史以比较版本
+        
+    - name: Check if version changed
+      id: check
+      run: |
+        # 获取当前版本
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "Current version: $CURRENT_VERSION"
+        
+        # 获取上一个提交的版本
+        PREVIOUS_VERSION=$(git show HEAD~1:package.json 2>/dev/null | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).version" 2>/dev/null || echo "0.0.0")
+        echo "Previous version: $PREVIOUS_VERSION"
+        
+        # 检查版本是否变化
+        if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+          echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+          echo "should-release=true" >> $GITHUB_OUTPUT
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        else
+          echo "Version unchanged: $CURRENT_VERSION"
+          echo "should-release=false" >> $GITHUB_OUTPUT
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        fi
+
+  build-and-release:
+    needs: check-version
+    if: needs.check-version.outputs.should-release == 'true'
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # 获取完整历史以支持标签创建
+        fetch-depth: 0
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -33,16 +70,16 @@ jobs:
     - name: Build extension
       run: npm run compile
       
-    - name: Get version from package.json
+    - name: Get version
       id: get_version
       run: |
-        VERSION=$(node -p "require('./package.json').version")
+        VERSION=${{ needs.check-version.outputs.version }}
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "Extension version: $VERSION"
+        echo "Building version: $VERSION"
         
     - name: Package extension
       run: npm run package
-        
+      
     - name: Create VSIX filename
       id: filename
       run: |
@@ -57,7 +94,17 @@ jobs:
         name: vscode-extension
         path: ${{ steps.filename.outputs.filename }}
         
-    - name: Create Release
+    - name: Publish to VS Code Marketplace
+      run: |
+        # 安装vsce
+        npm install -g @vscode/vsce
+        
+        # 发布到marketplace
+        vsce publish --pat ${{ secrets.VSCE_PAT }} --packagePath ${{ steps.filename.outputs.filename }}
+      env:
+        VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        
+    - name: Create GitHub Release
       id: create_release
       uses: softprops/action-gh-release@v1
       env:
@@ -68,24 +115,53 @@ jobs:
         body: |
           ## JSON String Converter Extension v${{ steps.get_version.outputs.version }}
           
-          ### Changes
-          - Auto-built from main branch
+          ### 🚀 What's New
+          - Auto-built and published to VS Code Marketplace
           - Version: ${{ steps.get_version.outputs.version }}
           
-          ### Installation
-          Download the `.vsix` file and install via VS Code:
+          ### 📦 Installation
+          **From VS Code Marketplace:**
           1. Open VS Code
           2. Go to Extensions (Ctrl+Shift+X)
-          3. Click the "..." menu and select "Install from VSIX..."
-          4. Select the downloaded file
+          3. Search for "jsonstr"
+          4. Click Install
           
-          ### Features
+          **Manual Installation:**
+          1. Download the `.vsix` file from this release
+          2. Open VS Code
+          3. Go to Extensions (Ctrl+Shift+X)
+          4. Click the "..." menu and select "Install from VSIX..."
+          5. Select the downloaded file
+          
+          ### ✨ Features
           - JSON format detection and conversion
           - Auto-detection mode (configurable)
           - Preserve indentation format
           - Silent mode support
           - Shortcut: Ctrl+Shift+T (Windows/Linux) or Cmd+Shift+T (Mac)
+          
+          ### 🔧 Configuration
+          - Auto-detection: `jsonstr.autoDetection`
+          - Preserve indentation: `jsonstr.preserveIndentation`
+          - Show notifications: `jsonstr.showNotifications`
         files: ${{ steps.filename.outputs.filename }}
         draft: false
         prerelease: false
         generate_release_notes: true
+        
+    - name: Comment on PR (if applicable)
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: `🎉 **Extension v${{ steps.get_version.outputs.version }} published!**
+            
+            ✅ Built and published to VS Code Marketplace
+            📦 VSIX file available in release artifacts
+            🔗 [View Release](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/v${{ steps.get_version.outputs.version }})
+            `
+          })
