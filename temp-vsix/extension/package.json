@@ -1,8 +1,8 @@
 {
   "name": "jsonstr",
-  "displayName": "JSON String Converter",
-  "description": "A powerful VS Code extension for detecting and converting JSON format text",
-  "version": "1.0.5",
+  "displayName": "jsonstr",
+  "description": "A simple VS Code extension",
+  "version": "1.0.3",
   "publisher": "t0my0ung",
   "icon": "media/icon.jpg",
   "keywords": ["json", "converter", "formatter", "string", "vscode"],
@@ -108,8 +108,7 @@
     "version": "node scripts/version.js",
     "version:current": "node scripts/version.js --current",
     "debug:workflow": "node scripts/debug-workflow.js",
-    "check:vsix": "node scripts/check-vsix.js",
-    "test:pat": "node scripts/test-pat.js"
+    "check:vsix": "node scripts/check-vsix.js"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
