@@ -105,7 +105,8 @@
     "lint": "eslint src",
     "test": "vscode-test",
     "version": "node scripts/version.js",
-    "version:current": "node scripts/version.js --current"
+    "version:current": "node scripts/version.js --current",
+    "debug:workflow": "node scripts/debug-workflow.js"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
