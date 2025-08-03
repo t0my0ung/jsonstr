@@ -2,7 +2,7 @@
   "name": "jsonstr",
   "displayName": "jsonstr",
   "description": "A simple VS Code extension",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "publisher": "t0my0ung",
   "icon": "media/icon.jpg",
   "repository": {

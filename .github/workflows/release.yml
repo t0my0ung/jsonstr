@@ -99,7 +99,23 @@ jobs:
         # 安装vsce
         npm install -g @vscode/vsce
         
+        # 验证package.json
+        echo "Validating package.json..."
+        node -e "
+          const pkg = require('./package.json');
+          console.log('Name:', pkg.name);
+          console.log('Version:', pkg.version);
+          console.log('Publisher:', pkg.publisher);
+          console.log('DisplayName:', pkg.displayName);
+          console.log('Description:', pkg.description);
+        "
+        
+        # 验证VSIX文件
+        echo "Validating VSIX file..."
+        vsce verify ${{ steps.filename.outputs.filename }}
+        
         # 发布到marketplace
+        echo "Publishing to VS Code Marketplace..."
         vsce publish --pat ${{ secrets.VSCE_PAT }} --packagePath ${{ steps.filename.outputs.filename }}
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
