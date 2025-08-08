@@ -2,6 +2,22 @@
 
 A powerful VSCode extension for detecting and converting JSON format text.
 
+
+### Convert via shortcut `cmd + shift + T` (Recommended)
+![Shortcut](on_shortcut.gif)
+
+
+
+### Convert via Click
+
+![Click](on_click.gif)
+
+
+
+
+> **_NOTE:_**  Find prompt too much? Set this 
+`"jsonstr.showNotifications": false`
+
 ## Features
 
 ### 🔍 JSON Detection
