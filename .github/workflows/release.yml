@@ -37,6 +37,9 @@ jobs:
       id: check_version
       run: |
         echo "should-release=true" >> $GITHUB_OUTPUT
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        
         # # 获取当前版本
         # CURRENT_VERSION=$(node -p "require('./package.json').version")
         # echo "Current version: $CURRENT_VERSION"
