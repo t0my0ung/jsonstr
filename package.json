@@ -2,10 +2,16 @@
   "name": "jsonstr",
   "displayName": "JSON String Converter",
   "description": "A powerful VS Code extension for detecting and converting JSON format text",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "publisher": "t0my0ung",
   "icon": "media/icon.jpg",
-  "keywords": ["json", "converter", "formatter", "string", "vscode"],
+  "keywords": [
+    "json",
+    "converter",
+    "formatter",
+    "string",
+    "vscode"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/t0my0ung/jsonstr.git"
@@ -75,7 +81,7 @@
         },
         "jsonstr.showNotifications": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Show notification messages for successful conversions"
         }
       }

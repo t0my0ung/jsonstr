@@ -75,7 +75,7 @@
         },
         "jsonstr.showNotifications": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Show notification messages for successful conversions"
         }
       }
