@@ -17,13 +17,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished",
-    "onCommand:jsonstr.helloWorld",
-    "onCommand:jsonstr.askQuestion",
-    "onCommand:jsonstr.checkSelectedText",
-    "onCommand:jsonstr.convertJson",
-    "onCommand:jsonstr.test",
-    "onCommand:jsonstr.toggleAutoDetection"
+    "*"
   ],
   "main": "./dist/extension.js",
   "contributes": {

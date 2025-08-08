@@ -23,6 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
 	let selectionChangeDisposable: vscode.Disposable | undefined;
 	let lastSelectedText = '';
 	let isProcessing = false;
+	let debounceTimer: NodeJS.Timeout | undefined;
 
 	// 当编辑器激活时开始监听
 	const startSelectionListener = () => {
@@ -31,6 +32,11 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		selectionChangeDisposable = vscode.window.onDidChangeTextEditorSelection(async (event) => {
+			// 简单去抖，降低频繁选区变动的触发频率
+			if (debounceTimer) {
+				clearTimeout(debounceTimer);
+			}
+			debounceTimer = setTimeout(async () => {
 			// 检查是否启用自动检测
 			if (!getAutoDetection()) {
 				return;
@@ -57,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 			lastSelectedText = trimmedText;
 
 			// 如果选中的文本太短，不处理
-			if (trimmedText.length < 3) {
+			if (trimmedText.length < 8) {
 				return;
 			}
 
@@ -175,6 +181,8 @@ export function activate(context: vscode.ExtensionContext) {
 					}
 				}
 			}
+			}, 200);
+
 		});
 	};
 
