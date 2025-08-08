@@ -2,7 +2,7 @@
   "name": "jsonstr",
   "displayName": "JSON String Converter",
   "description": "A powerful VS Code extension for detecting and converting JSON format text",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "publisher": "t0my0ung",
   "icon": "media/icon.jpg",
   "keywords": ["json", "converter", "formatter", "string", "vscode"],
@@ -11,7 +11,7 @@
     "url": "https://github.com/t0my0ung/jsonstr.git"
   },
   "engines": {
-    "vscode": "^1.99.0"
+    "vscode": "^1.95.0"
   },
   "categories": [
     "Other"
@@ -118,7 +118,7 @@
     "@tsconfig/svelte": "^5.0.4",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "@types/vscode": "^1.99.0",
+    "@types/vscode": "^1.95.0",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
     "@vscode/test-cli": "^0.0.11",
