@@ -15,7 +15,7 @@ function updateVersion(newVersion) {
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
     
     console.log(`✅ Version updated from ${oldVersion} to ${newVersion}`);
-    console.log(`📦 Next release will be: jsonstr-${newVersion}.vsix`);
+    console.log(`📦 Next release will be: ${packageJson.name}-${newVersion}.vsix`);
     
     return true;
   } catch (error) {

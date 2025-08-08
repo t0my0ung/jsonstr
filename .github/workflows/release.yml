@@ -77,7 +77,8 @@ jobs:
       id: filename
       run: |
         VERSION=${{ steps.check_version.outputs.version }}
-        FILENAME="jsonstr-$VERSION.vsix"
+        PACKAGE_NAME=$(node -p "require('./package.json').name")
+        FILENAME="${PACKAGE_NAME}-$VERSION.vsix"
         echo "filename=$FILENAME" >> $GITHUB_OUTPUT
         echo "VSIX filename: $FILENAME"
         
