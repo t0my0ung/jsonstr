@@ -86,13 +86,18 @@ jobs:
         
     - name: Publish to VS Code Marketplace
       if: steps.check_version.outputs.should-release == 'true'
+      env:
+        VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        FILENAME: ${{ steps.filename.outputs.filename }}
+        RELEASE_VERSION: ${{ steps.check_version.outputs.version }}
       run: |
-        # 安装vsce
+        # 安装 vsce
         npm install -g @vscode/vsce
         
-        # 验证package.json
+        # 验证 package.json
         echo "Validating package.json..."
         node -e "
+          const fs = require('fs');
           const pkg = require('./package.json');
           console.log('Name:', pkg.name);
           console.log('Version:', pkg.version);
@@ -100,22 +105,20 @@ jobs:
           console.log('DisplayName:', pkg.displayName);
           console.log('Description:', pkg.description);
           console.log('Icon:', pkg.icon);
-          console.log('Icon exists:', require('fs').existsSync(pkg.icon));
+          console.log('Icon exists:', fs.existsSync(pkg.icon));
         "
         
-        # 验证VSIX文件
+        # 验证 VSIX 文件
         echo "Validating VSIX file..."
-        vsce ls ${{ steps.filename.outputs.filename }}
+        vsce ls "$FILENAME"
         
-        # 运行VSIX检查脚本
+        # 运行 VSIX 检查脚本
         echo "Running VSIX validation script..."
         npm run check:vsix
         
-        # 发布到marketplace
-        echo "Publishing to VS Code Marketplace..."
-        
-        # 详细检查PAT
-        if [ -z "${{ secrets.VSCE_PAT }}" ]; then
+        # 检查 PAT
+        echo "Checking VSCE_PAT secret..."
+        if [ -z "$VSCE_PAT" ]; then
           echo "❌ VSCE_PAT secret is NOT set"
           echo "Please set VSCE_PAT secret in GitHub repository settings"
           exit 1
@@ -124,17 +127,15 @@ jobs:
           echo "PAT length: ${#VSCE_PAT} characters"
         fi
         
-        # 检查VSIX文件是否存在
-        if [ ! -f "${{ steps.filename.outputs.filename }}" ]; then
-          echo "❌ VSIX file not found: ${{ steps.filename.outputs.filename }}"
+        # 检查 VSIX 文件是否存在
+        if [ ! -f "$FILENAME" ]; then
+          echo "❌ VSIX file not found: $FILENAME"
           exit 1
         fi
         
-        # 发布到marketplace
-        echo "Attempting to publish version ${{ steps.check_version.outputs.version }}..."
-        
-        # 尝试发布
-        if vsce publish --pat ${{ secrets.VSCE_PAT }} --packagePath ${{ steps.filename.outputs.filename }} --no-dependencies; then
+        # 发布
+        echo "Attempting to publish version $RELEASE_VERSION..."
+        if vsce publish --pat "$VSCE_PAT" --packagePath "$FILENAME" --no-dependencies; then
           echo "✅ Successfully published to VS Code Marketplace"
         else
           echo "❌ Failed to publish to VS Code Marketplace"
@@ -145,8 +146,6 @@ jobs:
           echo "4. Extension metadata issues"
           exit 1
         fi
-      env:
-        VSCE_PAT: ${{ secrets.VSCE_PAT }}
         
     - name: Create GitHub Release
       if: steps.check_version.outputs.should-release == 'true'
