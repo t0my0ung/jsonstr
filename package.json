@@ -11,13 +11,19 @@
     "url": "https://github.com/t0my0ung/jsonstr.git"
   },
   "engines": {
-    "vscode": "^1.95.0"
+    "vscode": "^1.60.0"
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "onCommand:jsonstr.helloWorld",
+    "onCommand:jsonstr.askQuestion",
+    "onCommand:jsonstr.checkSelectedText",
+    "onCommand:jsonstr.convertJson",
+    "onCommand:jsonstr.test",
+    "onCommand:jsonstr.toggleAutoDetection"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -118,7 +124,7 @@
     "@tsconfig/svelte": "^5.0.4",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "@types/vscode": "^1.95.0",
+    "@types/vscode": "^1.60.0",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
     "@vscode/test-cli": "^0.0.11",
