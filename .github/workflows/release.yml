@@ -139,6 +139,17 @@ jobs:
         fi
         
         # 发布
+        if npx ovsx publish "$FILENAME" -p "$OPENVSX_PAT" -y; then
+          echo "✅ Successfully published to OPENVSX Marketplace"
+                else
+          echo "❌ Failed to publish to OPENVSX Marketplace"
+          echo "Possible reasons:"
+          echo "1. Version already exists in marketplace"
+          echo "2. OPENVSXPAT is invalid or expired"
+          echo "3. Publisher ID mismatch"
+          echo "4. Extension metadata issues"
+          exit 1;
+        fi        
         echo "Attempting to publish version $RELEASE_VERSION..."
         if vsce publish --pat "$VSCE_PAT" --packagePath "$FILENAME" --no-dependencies; then
           echo "✅ Successfully published to VS Code Marketplace"
@@ -149,19 +160,9 @@ jobs:
           echo "2. PAT is invalid or expired"
           echo "3. Publisher ID mismatch"
           echo "4. Extension metadata issues"
-          exit 1
+          exit 1;
         fi
-        if npx ovsx publish "$FILENAME" -p "$OPENVSX_PAT" -y; then
-          echo "✅ Successfully published to OPENVSX Marketplace"
-                else
-          echo "❌ Failed to publish to OPENVSX Marketplace"
-          echo "Possible reasons:"
-          echo "1. Version already exists in marketplace"
-          echo "2. OPENVSXPAT is invalid or expired"
-          echo "3. Publisher ID mismatch"
-          echo "4. Extension metadata issues"
-          exit 1
-        fi
+
         
     - name: Create GitHub Release
       if: steps.check_version.outputs.should-release == 'true'
