@@ -89,7 +89,7 @@ jobs:
         name: vscode-extension
         path: ${{ steps.filename.outputs.filename }}
         
-    - name: Publish to VS Code Marketplace
+    - name: Publish to VS Code Marketplace and OpenVSX
       if: steps.check_version.outputs.should-release == 'true'
       env:
         VSCE_PAT: ${{ secrets.VSCE_PAT }}
@@ -147,6 +147,17 @@ jobs:
           echo "Possible reasons:"
           echo "1. Version already exists in marketplace"
           echo "2. PAT is invalid or expired"
+          echo "3. Publisher ID mismatch"
+          echo "4. Extension metadata issues"
+          exit 1
+        fi
+        if npx ovsx publish "$FILENAME" -p "$OPENVSX_PAT" -y; then
+          echo "✅ Successfully published to OPENVSX Marketplace"
+                else
+          echo "❌ Failed to publish to OPENVSX Marketplace"
+          echo "Possible reasons:"
+          echo "1. Version already exists in marketplace"
+          echo "2. OPENVSXPAT is invalid or expired"
           echo "3. Publisher ID mismatch"
           echo "4. Extension metadata issues"
           exit 1
