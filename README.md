@@ -13,7 +13,7 @@ A powerful VSCode extension for detecting and converting JSON format text.
 ![Click](on_click.gif)
 
 
-<html><blockquote class="imgur-embed-pub" lang="en" data-id="a/JuGXFxG" data-context="false" ><a href="//imgur.com/a/JuGXFxG">Jsonstr extension converts via click</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script></html>
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/JuGXFxG" data-context="false" ><a href="//imgur.com/a/JuGXFxG">Jsonstr extension converts via click</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 
 
 
