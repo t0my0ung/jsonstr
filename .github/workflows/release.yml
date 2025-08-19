@@ -33,7 +33,6 @@ jobs:
     - name: Install dependencies
       run: |
         npm ci
-        npm install ovsx
       
     - name: Check if version changed
       id: check_version
